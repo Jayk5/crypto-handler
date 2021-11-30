@@ -23,7 +23,7 @@ import {
 } from "react-router-dom";
 
 
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 export default function MainNav() {
     return (
