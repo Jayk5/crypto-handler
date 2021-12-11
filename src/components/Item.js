@@ -6,6 +6,11 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import ButtonBase from '@mui/material/ButtonBase';
 import FavoriteTwoToneIcon from '@mui/icons-material/FavoriteTwoTone';
+import { getAuth } from "firebase/auth";
+import { getFirestore, doc, setDoc, updateDoc, getDoc } from "firebase/firestore";
+
+const auth = getAuth();
+const db = getFirestore();
 
 const Img = styled('img')({
     margin: 'auto',
@@ -14,13 +19,38 @@ const Img = styled('img')({
     maxHeight: '100%',
 });
 
-export default function Item({ name, image, symbol, price, volume, marketcap, priceChange }) {
-
+export default function Item({ id, name, image, symbol, price, volume, marketcap, priceChange, setList }) {
 
     const [bstate, setbstate] = useState(false)
 
-    function clickHandler() {
+    async function clickHandler() {
         setbstate(true);
+        const snap = await getDoc(doc(db, "userFavs", auth.currentUser.email))
+        if (snap.exists()) {
+            console.log(snap.data())
+            let x = snap.data().Favstr
+            console.log(x)
+            if (x.includes(`${id}%2C`)) {
+                x = x.replace(`${id}%2C`, '')
+                console.log('x replaced is this - ', x)
+                await updateDoc(doc(db, "userFavs", auth.currentUser.email), {
+                    Favstr: x
+                })
+                setList((list) => {
+                    return list.filter((item) => item.id !== id)
+                })
+            }
+            else {
+                await updateDoc(doc(db, "userFavs", auth.currentUser.email), {
+                    Favstr: snap.data().Favstr + id + "%2C"
+                })
+            }
+        }
+        else {
+            await setDoc(doc(db, "userFavs", auth.currentUser.email), {
+                Favstr: id + "%2C"
+            })
+        }
     }
 
     return (
@@ -62,8 +92,7 @@ export default function Item({ name, image, symbol, price, volume, marketcap, pr
                                 {priceChange.toFixed(2)}%
                             </Typography>
                         }
-                        <FavoriteTwoToneIcon onClick={clickHandler} style={{ color: bstate ? 'red' : 'black' }} />
-
+                        {auth.currentUser ? <FavoriteTwoToneIcon onClick={clickHandler} style={{ color: bstate ? 'red' : 'black' }} /> : " "}
                     </Grid>
                 </Grid>
             </Grid>
