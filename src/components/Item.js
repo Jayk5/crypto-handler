@@ -19,7 +19,7 @@ const Img = styled("img")({
     maxHeight: "100%",
 });
 
-export default function Item({ id, name, image, symbol, price, volume, marketcap, priceChange, setList }) {
+export default function Item({ id, name, image, symbol, price, volume, marketcap, priceChange, setList, setRed = false }) {
     const [bstate, setbstate] = useState(false);
 
     async function clickHandler() {
@@ -88,8 +88,10 @@ export default function Item({ id, name, image, symbol, price, volume, marketcap
                                 {priceChange}%
                             </Typography>
                         )}
-                        {auth.currentUser ? (
+                        {auth.currentUser && !setRed ? (
                             <FavoriteTwoToneIcon onClick={clickHandler} style={{ color: bstate ? "red" : "black" }} />
+                        ) : auth.currentUser && setRed ? (
+                            <FavoriteTwoToneIcon onClick={clickHandler} style={{ color: bstate ? "black" : "red" }} />
                         ) : (
                             " "
                         )}

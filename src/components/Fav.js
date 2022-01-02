@@ -87,7 +87,7 @@ export default function Fav() {
                     </Typography>
                 </CardContent>
             </Card>
-            {auth.currentUser ? <List data={list} setList={setList} /> : " "}
+            {auth.currentUser ? <List data={list} setList={setList} setRed={true} /> : " "}
         </Wrap>
     );
 }
