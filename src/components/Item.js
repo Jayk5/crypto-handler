@@ -26,12 +26,12 @@ export default function Item({ id, name, image, symbol, price, volume, marketcap
         setbstate(true);
         const snap = await getDoc(doc(db, "userFavs", auth.currentUser.email));
         if (snap.exists()) {
-            console.log(snap.data());
+            // console.log(snap.data());
             let x = snap.data().Favstr;
-            console.log(x);
+            // // console.log(x);
             if (x.includes(`${id}%2C`)) {
                 x = x.replace(`${id}%2C`, "");
-                console.log("x replaced is this - ", x);
+                // // console.log("x replaced is this - ", x);
                 await updateDoc(doc(db, "userFavs", auth.currentUser.email), {
                     Favstr: x,
                 });
@@ -55,7 +55,7 @@ export default function Item({ id, name, image, symbol, price, volume, marketcap
             <Grid container spacing={2}>
                 <Grid item>
                     <ButtonBase sx={{ width: 100, height: 100 }}>
-                        <Img alt={name} src={image} />
+                        <Img alt={name} src={image} loading="lazy" />
                     </ButtonBase>
                 </Grid>
                 <Grid item xs={12} sm container>

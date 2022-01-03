@@ -21,7 +21,7 @@ export default function Fav() {
         async function fetchData() {
             const qu = await getDoc(doc(db, "userFavs", auth.currentUser.email));
             if (qu.exists()) {
-                console.log(qu.data().Favstr);
+                // console.log(qu.data().Favstr);
                 if (qu.data().Favstr) {
                     axios
                         .get(
@@ -42,28 +42,26 @@ export default function Fav() {
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
             setCurUser(auth.currentUser);
-            if (user) console.log("User Signed In");
-            else console.log("User Signed out");
         });
     }, []);
 
     function signInwithFirebase() {
         signInWithPopup(auth, google_provider)
             .then(() => {
-                console.log(auth.currentUser);
+                // console.log(auth.currentUser);
             })
             .catch((e) => {
-                console.log(e);
+                // console.log(e);
             });
     }
 
     function signOutwithFirebase() {
         signOut(auth)
             .then(() => {
-                console.log("Signed out successfully");
+                // console.log("Signed out successfully");
             })
             .catch((e) => {
-                console.log(e);
+                // console.log(e);
             });
     }
 
