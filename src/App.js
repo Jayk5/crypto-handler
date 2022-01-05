@@ -1,11 +1,11 @@
 import "./firebase/firebase";
-import MainNav from './components/MainNav'
+import MainNav from "./components/MainNav";
 function App() {
-  return (
-    <>
-      <MainNav />
-    </>
-  );
+    return (
+        <>
+            <MainNav />
+        </>
+    );
 }
 
 export default App;
