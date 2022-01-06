@@ -13,6 +13,7 @@ import ListItemText from "@mui/material/ListItemText";
 import HomeIcon from "@mui/icons-material/Home";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";
+import GitHubIcon from "@mui/icons-material/GitHub";
 import Top from "./Top";
 import Home from "./Home";
 import Fav from "./Fav";
@@ -66,6 +67,20 @@ export default function MainNav() {
                         </ListItemIcon>
                         <ListItemText primary="Favorites" />
                     </ListItem>
+                    <Divider />
+                    <a
+                        style={{ textDecoration: "none", color: "inherit" }}
+                        target="_blank"
+                        rel="noopener"
+                        href="https://github.com/Jayk5/crypto-handler"
+                    >
+                        <ListItem button key="GitHub" to="https://github.com/Jayk5/crypto-handler">
+                            <ListItemIcon>
+                                <GitHubIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="GitHub" />
+                        </ListItem>
+                    </a>
                     <Divider />
                 </List>
             </Drawer>
