@@ -18,7 +18,7 @@ const db = getFirestore();
 export default function Fav() {
     const [curUser, setCurUser] = useState(auth.currentUser);
     const [list, setList] = useState(undefined);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         async function fetchData() {
@@ -34,11 +34,21 @@ export default function Fav() {
                             }&order=market_cap_desc&per_page=100&page=1&sparkline=false`
                         )
                         .then((res) => {
-                            setList(res.data);
                             setLoading(false);
+                            setList(res.data);
                         })
-                        .catch((error) => console.log(error));
+                        .catch((error) => {
+                            // console.log(error);
+                            setLoading(false);
+                            setList([]);
+                        });
+                } else {
+                    setLoading(false);
+                    setList([]);
                 }
+            } else {
+                setLoading(false);
+                setList([]);
             }
         }
         if (auth.currentUser) fetchData();
@@ -64,6 +74,7 @@ export default function Fav() {
     function signOutwithFirebase() {
         signOut(auth)
             .then(() => {
+                setList(undefined);
                 // console.log("Signed out successfully");
             })
             .catch((e) => {
@@ -91,18 +102,12 @@ export default function Fav() {
                     </Typography>
                 </CardContent>
             </Card>
-            {auth.currentUser && loading && list === undefined ? (
+            {auth.currentUser && !loading && list ? (
+                <List data={list} setList={setList} setRed={true} />
+            ) : auth.currentUser && loading && list === undefined ? (
                 <Box sx={{ width: "80%", pt: 2 }}>
                     <LinearProgress />
                 </Box>
-            ) : auth.currentUser && loading && list.length === 0 ? (
-                <Box component="main" sx={{ width: 1, flexGrow: 1, bgcolor: "background.default", p: 3 }}>
-                    <Typography style={{ fontWeight: 600 }} gutterBottom variant="h5" component="div" align="center">
-                        NO FAVORITES
-                    </Typography>
-                </Box>
-            ) : auth.currentUser && !loading ? (
-                <List data={list} setList={setList} setRed={true} />
             ) : (
                 " "
             )}
