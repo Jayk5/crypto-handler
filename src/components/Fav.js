@@ -4,8 +4,10 @@ import Wrap from "./Wrap";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import LinearProgress from "@mui/material/LinearProgress";
 import { onAuthStateChanged, getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
-import { getFirestore, doc, setDoc, updateDoc, getDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
 import List from "./List";
 import axios from "axios";
 
@@ -15,10 +17,12 @@ const db = getFirestore();
 
 export default function Fav() {
     const [curUser, setCurUser] = useState(auth.currentUser);
-    const [list, setList] = useState([]);
+    const [list, setList] = useState(undefined);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         async function fetchData() {
+            setLoading(true);
             const qu = await getDoc(doc(db, "userFavs", auth.currentUser.email));
             if (qu.exists()) {
                 // console.log(qu.data().Favstr);
@@ -31,6 +35,7 @@ export default function Fav() {
                         )
                         .then((res) => {
                             setList(res.data);
+                            setLoading(false);
                         })
                         .catch((error) => console.log(error));
                 }
@@ -48,6 +53,7 @@ export default function Fav() {
     function signInwithFirebase() {
         signInWithPopup(auth, google_provider)
             .then(() => {
+                setList(undefined);
                 // console.log(auth.currentUser);
             })
             .catch((e) => {
@@ -85,7 +91,21 @@ export default function Fav() {
                     </Typography>
                 </CardContent>
             </Card>
-            {auth.currentUser ? <List data={list} setList={setList} setRed={true} /> : " "}
+            {auth.currentUser && loading && list === undefined ? (
+                <Box sx={{ width: "80%", pt: 2 }}>
+                    <LinearProgress />
+                </Box>
+            ) : auth.currentUser && loading && list.length === 0 ? (
+                <Box component="main" sx={{ width: 1, flexGrow: 1, bgcolor: "background.default", p: 3 }}>
+                    <Typography style={{ fontWeight: 600 }} gutterBottom variant="h5" component="div" align="center">
+                        NO FAVORITES
+                    </Typography>
+                </Box>
+            ) : auth.currentUser && !loading ? (
+                <List data={list} setList={setList} setRed={true} />
+            ) : (
+                " "
+            )}
         </Wrap>
     );
 }

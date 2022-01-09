@@ -2,11 +2,13 @@ import React from "react";
 import { useRef, useState, useEffect } from "react";
 import Typography from "@mui/material/Typography";
 import Wrap from "./Wrap";
+import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import TextField from "@mui/material/TextField";
+import LinearProgress from "@mui/material/LinearProgress";
 import axios from "axios";
 import List from "./List";
 
@@ -14,11 +16,14 @@ export default function Home() {
     const searchRef = useRef("");
     const [list, setList] = useState([]);
     const [search, setSearch] = useState("");
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        setLoading(true);
         axios
             .get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=inr&order=volume_desc&per_page=250&page=1&sparkline=false")
             .then((res) => {
+                setLoading(false);
                 setList(res.data);
             })
             .catch((error) => console.log(error));
@@ -54,7 +59,14 @@ export default function Home() {
                     <TextField fullWidth label="Search" id="fullWidth" inputRef={searchRef} onChange={handleSearch} />
                 </CardActions>
             </Card>
-            <List data={filter} />
+
+            {loading ? (
+                <Box sx={{ width: "70%", pt: 2 }}>
+                    <LinearProgress />
+                </Box>
+            ) : (
+                <List data={filter} />
+            )}
         </Wrap>
     );
 }
