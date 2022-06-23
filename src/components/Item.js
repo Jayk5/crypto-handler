@@ -65,10 +65,10 @@ export default function Item({ id, name, image, symbol, price, volume, marketcap
                                 {name}
                             </Typography>
                             <Typography variant="body2" gutterBottom>
-                                Volume : {volume.toLocaleString()}
+                                Volume : {volume}
                             </Typography>
                             <Typography variant="body2" gutterBottom>
-                                Market Cap : {marketcap.toLocaleString()}
+                                Market Cap : {marketcap}
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
                                 {symbol}
